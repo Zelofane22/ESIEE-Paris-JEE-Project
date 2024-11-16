@@ -1,19 +1,18 @@
-package techsupport.final_project.servlets;
+package techsupport.servlets.admin;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import techsupport.final_project.beans.RequeteBean;
-import techsupport.final_project.beans.UtilisateurBean;
-import techsupport.final_project.daos.RequeteDAO;
+import techsupport.entity.Requete;
+import techsupport.entity.Utilisateur;
+import techsupport.daos.RequeteDAO;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/gestionRequetesAdmin")
+@WebServlet("/admin/gestionRequetes")
 public class GestionRequetesServlet extends HttpServlet {
 
     private RequeteDAO requeteDAO;
@@ -26,14 +25,16 @@ public class GestionRequetesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, IOException {
         // Récupérer l'administrateur connecté
-        UtilisateurBean admin = (UtilisateurBean) request.getSession().getAttribute("utilisateurConnecte");
+        Utilisateur admin = (Utilisateur) request.getSession().getAttribute("utilisateurConnecte");
 
         if (admin == null || !"admin".equals(admin.getRole())) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        List<RequeteBean> requetes = requeteDAO.recupererToutesLesRequetes();
+        // l'admin doit aussi récupérer une requête par id
+
+        List<Requete> requetes = requeteDAO.recupererToutesLesRequetes();
         request.setAttribute("requetes", requetes);
         request.getRequestDispatcher("/gestionRequetesAdmin.jsp").forward(request, response);
     }
@@ -41,7 +42,7 @@ public class GestionRequetesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Récupérer l'administrateur connecté
-        UtilisateurBean admin = (UtilisateurBean) request.getSession().getAttribute("utilisateurConnecte");
+        Utilisateur admin = (Utilisateur) request.getSession().getAttribute("utilisateurConnecte");
 
         if (admin == null || !"admin".equals(admin.getRole())) {
             response.sendRedirect("login.jsp");
@@ -52,10 +53,28 @@ public class GestionRequetesServlet extends HttpServlet {
 
         switch (action) {
             case "update":
-                int id = Integer.parseInt(request.getParameter("id"));
-                String nouveauStatut = request.getParameter("statut");
-                if (nouveauStatut != null) {
-                    requeteDAO.mettreAJourStatut(id, nouveauStatut);
+                try {
+                    // Récupérer l'ID de la requête
+                    int id = Integer.parseInt(request.getParameter("id"));
+
+                    // Récupérer le statut sous forme de chaîne
+                    String nouveauStatutStr = request.getParameter("statut");
+
+                    if (nouveauStatutStr != null) {
+                        // Convertir la chaîne en enum
+                        try {
+                            Requete.Statut nouveauStatut = Requete.Statut.valueOf(nouveauStatutStr.toUpperCase());
+                            requeteDAO.mettreAJourStatut(id, nouveauStatut);
+                        } catch (IllegalArgumentException e) {
+                            // Gestion des statuts invalides
+                            System.err.println("Statut invalide : " + nouveauStatutStr);
+                            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Statut invalide.");
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    // Gestion des ID non valides
+                    System.err.println("ID non valide : " + request.getParameter("id"));
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID non valide.");
                 }
                 break;
             case "delete":
@@ -67,7 +86,7 @@ public class GestionRequetesServlet extends HttpServlet {
                 String reponse = request.getParameter("reponse");
                 if (reponse != null) {
                     // Envoyer une réponse à l'utilisateur (par exemple, via email)
-                    RequeteBean requete = requeteDAO.recupererRequeteParId(idToRespond);
+                    Requete requete = requeteDAO.recupererRequeteParId(idToRespond);
                     envoyerReponseParEmail(requete, reponse);
                 }
                 break;
@@ -77,7 +96,7 @@ public class GestionRequetesServlet extends HttpServlet {
         response.sendRedirect("gestionRequetesAdmin");
     }
 
-    private void envoyerReponseParEmail(RequeteBean requete, String reponse) {
+    private void envoyerReponseParEmail(Requete requete, String reponse) {
         // Implémentation de l'envoi de mail ici (par exemple, utiliser JavaMail API)
     }
 }
