@@ -36,9 +36,11 @@ dependencies {
     // MySQL Driver
     implementation 'mysql:mysql-connector-java:8.0.33'
 
+
+    implementation 'commons-codec:commons-codec:1.15'
+
 }
 
 test {
     useJUnitPlatform()
 }
-
