@@ -1,20 +1,20 @@
-package techsupport.final_project.daos;
+package techsupport.daos;
 
-import techsupport.final_project.beans.UtilisateurBean;
+import techsupport.entity.Utilisateur;
 
 import java.util.List;
 
 public class UtilisateurDAO {
-    public void ajouterUtilisateur(UtilisateurBean utilisateur) {
+    public void ajouterUtilisateur(Utilisateur utilisateur) {
         // Méthode vide à compléter ultérieurement
     }
 
-    public UtilisateurBean trouverUtilisateurParId(int id) {
+    public Utilisateur trouverUtilisateurParId(int id) {
         // Méthode vide à compléter ultérieurement
         return null;
     }
 
-    public void mettreAJourUtilisateur(UtilisateurBean utilisateur) {
+    public void mettreAJourUtilisateur(Utilisateur utilisateur) {
         // Méthode vide à compléter ultérieurement
     }
 
@@ -22,12 +22,12 @@ public class UtilisateurDAO {
         // Méthode vide à compléter ultérieurement
     }
 
-    public List<UtilisateurBean> recupererTousLesUtilisateurs() {
+    public List<Utilisateur> recupererTousLesUtilisateurs() {
         // Méthode vide à compléter ultérieurement
         return null;
     }
 
-    public UtilisateurBean verifierIdentifiants(String email, String password) {
+    public Utilisateur verifierIdentifiants(String email, String password) {
         // Méthode vide à compléter ultérieurement
         return null;
     }

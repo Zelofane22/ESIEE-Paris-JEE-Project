@@ -1,15 +1,14 @@
-package techsupport.final_project.servlets;
+package techsupport.servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import techsupport.final_project.beans.UtilisateurBean;
-import techsupport.final_project.daos.UtilisateurDAO;
+import techsupport.entity.Utilisateur;
+import techsupport.daos.UtilisateurDAO;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet("/authentification")
 public class AuthenticationServlet extends HttpServlet {
@@ -29,7 +28,7 @@ public class AuthenticationServlet extends HttpServlet {
 
         try {
             // Vérifier les informations d'identification de l'utilisateur
-            UtilisateurBean utilisateur = utilisateurDAO.verifierIdentifiants(email, password);
+            Utilisateur utilisateur = utilisateurDAO.verifierIdentifiants(email, password);
 
             if (utilisateur != null) {
                 // Stocker les informations de l'utilisateur dans la session
@@ -39,7 +38,7 @@ public class AuthenticationServlet extends HttpServlet {
                 if ("admin".equals(utilisateur.getRole())) {
                     response.sendRedirect("gestionRequetesAdmin");
                 } else {
-                    response.sendRedirect("requeteUtilisateur");
+                    response.sendRedirect("mesRequetes");
                 }
             } else {
                 // Si les identifiants sont incorrects, renvoyer vers la page de connexion avec un message d'erreur

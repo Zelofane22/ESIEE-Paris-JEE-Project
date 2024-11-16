@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Utilisateur implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false)
     private String nom;
@@ -41,11 +41,11 @@ public class Utilisateur implements Serializable {
     }
 
     // Getters et Setters
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

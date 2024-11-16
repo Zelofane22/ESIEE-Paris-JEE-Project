@@ -1,4 +1,4 @@
-package techsupport.final_project.servlets;
+package techsupport.servlets.users;
 
 
 import jakarta.servlet.ServletException;
@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.digest.DigestUtils;
-import techsupport.final_project.beans.UtilisateurBean;
-import techsupport.final_project.daos.UtilisateurDAO;
+import techsupport.entity.Utilisateur;
+import techsupport.daos.UtilisateurDAO;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -65,11 +65,11 @@ public class GestionUtilisateurServlet extends HttpServlet {
         String hashedPassword = DigestUtils.sha256Hex(password);
 
         // Créer un nouvel utilisateur
-        UtilisateurBean utilisateur = new UtilisateurBean();
+        Utilisateur utilisateur = new Utilisateur();
         utilisateur.setNom(nom);
         utilisateur.setEmail(email);
-        utilisateur.setPassword(hashedPassword);
-        utilisateur.setRole("utilisateur");
+        utilisateur.setMotDePasse(hashedPassword);
+        utilisateur.setRole(Utilisateur.Role.UTILISATEUR);
 
         // Enregistrer l'utilisateur dans la base de données
         utilisateurDAO.ajouterUtilisateur(utilisateur);
@@ -81,7 +81,7 @@ public class GestionUtilisateurServlet extends HttpServlet {
 
     private void mettreAJourUtilisateur(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         // Récupérer l'utilisateur connecté
-        UtilisateurBean utilisateurConnecte = (UtilisateurBean) request.getSession().getAttribute("utilisateurConnecte");
+        Utilisateur utilisateurConnecte = (Utilisateur) request.getSession().getAttribute("utilisateurConnecte");
 
         if (utilisateurConnecte == null) {
             response.sendRedirect("login.jsp");
@@ -104,7 +104,7 @@ public class GestionUtilisateurServlet extends HttpServlet {
 
         if (nouveauMotDePasse != null && !nouveauMotDePasse.isEmpty()) {
             String hashedPassword = DigestUtils.sha256Hex(nouveauMotDePasse);
-            utilisateurConnecte.setPassword(hashedPassword);
+            utilisateurConnecte.setMotDePasse(hashedPassword);
         }
 
         // Mettre à jour l'utilisateur dans la base de données
@@ -117,7 +117,7 @@ public class GestionUtilisateurServlet extends HttpServlet {
 
     private void supprimerUtilisateur(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         // Récupérer l'utilisateur connecté
-        UtilisateurBean utilisateurConnecte = (UtilisateurBean) request.getSession().getAttribute("utilisateurConnecte");
+        Utilisateur utilisateurConnecte = (Utilisateur) request.getSession().getAttribute("utilisateurConnecte");
 
         if (utilisateurConnecte == null) {
             response.sendRedirect("login.jsp");
