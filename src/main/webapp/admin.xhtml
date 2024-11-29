@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Admin - Gestion des Requêtes</title>
+</h:head>
+<h:body>
+    <h:form>
+        <h:dataTable value="#{requeteBean.toutesLesRequetes}" var="requete">
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                #{requete.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Sujet</f:facet>
+                #{requete.sujet}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Description</f:facet>
+                #{requete.description}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Statut</f:facet>
+                #{requete.statut}
+            </h:column>
+        </h:dataTable>
+        <h:commandButton value="Déconnexion" action="#{authBean.logout}" />
+    </h:form>
+</h:body>
+</html>

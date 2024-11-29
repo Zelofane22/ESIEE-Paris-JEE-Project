@@ -4,6 +4,10 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
+  <component name="ProjectResources">
+    <resource url="http://xmlns.jcp.org/jsf/core" location="$PROJECT_DIR$/.smarttomcat/Final_Project.main/conf/tomcat-users.xsd" />
+    <resource url="http://xmlns.jcp.org/jsf/html" location="$PROJECT_DIR$/.smarttomcat/Final_Project.main/conf/tomcat-users.xsd" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

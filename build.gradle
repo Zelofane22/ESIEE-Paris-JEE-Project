@@ -39,6 +39,10 @@ dependencies {
 
     implementation 'commons-codec:commons-codec:1.15'
 
+    implementation 'jakarta.faces:jakarta.faces-api:3.0.0'
+    implementation 'org.glassfish:jakarta.faces:3.0.0'
+    implementation 'jakarta.enterprise:jakarta.enterprise.cdi-api:3.0.0'
+
 }
 
 test {

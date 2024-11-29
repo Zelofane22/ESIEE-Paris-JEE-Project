@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Utilisateur - Mes Requêtes</title>
+</h:head>
+<h:body>
+    <h:form>
+        <h:dataTable value="#{requeteBean.toutesLesRequetes}" var="requete">
+            <h:column>
+                <f:facet name="header">Sujet</f:facet>
+                #{requete.sujet}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Description</f:facet>
+                #{requete.description}
+            </h:column>
+        </h:dataTable>
+        <h:inputText value="#{requeteBean.requete.sujet}" placeholder="Sujet" />
+        <h:inputText value="#{requeteBean.requete.description}" placeholder="Description" />
+        <h:commandButton value="Ajouter Requête" action="#{requeteBean.ajouterRequete}" />
+        <h:commandButton value="Déconnexion" action="#{authBean.logout}" />
+    </h:form>
+</h:body>
+</html>
