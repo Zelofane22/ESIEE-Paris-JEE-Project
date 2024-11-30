@@ -13,20 +13,20 @@ public class AuthBean implements Serializable {
     private UtilisateurBean utilisateur = new UtilisateurBean(); // Utilisateur connecté
     private boolean loggedIn = false;
 
-    // Simule une base de données d'utilisateurs
+
     private static final Map<String, UtilisateurBean> utilisateurs = new HashMap<>();
 
     static {
         // Ajoute des utilisateurs pour les tests
         UtilisateurBean admin = new UtilisateurBean();
-        admin.setId(1L); // Long avec 'L'
+        admin.setId(1L);
         admin.setNom("Admin");
         admin.setEmail("admin@example.com");
         admin.setPassword("admin123");
         admin.setRole("admin");
 
         UtilisateurBean user = new UtilisateurBean();
-        user.setId(2L); // Long avec 'L'
+        user.setId(2L);
         user.setNom("User");
         user.setEmail("user@example.com");
         user.setPassword("user123");
@@ -63,7 +63,7 @@ public class AuthBean implements Serializable {
             }
         }
 
-        // Ajouter un message d'erreur si échec de connexion
+        // message d'erreur si échec de connexion
         jakarta.faces.context.FacesContext.getCurrentInstance().addMessage(null,
                 new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Erreur", "Identifiants incorrects."));
         return null;
