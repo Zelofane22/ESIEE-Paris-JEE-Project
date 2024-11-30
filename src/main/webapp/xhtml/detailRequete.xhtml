@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Détail de la Requête</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 800px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #388E3C;
+        }
+    </style>
+</h:head>
+<h:body>
+    <header>
+        <h1>Détail de la Requête</h1>
+    </header>
+    <div class="container">
+        <h2>Informations</h2>
+        <p><strong>ID :</strong> #{requeteBean.selectedRequete.id}</p>
+        <p><strong>Sujet :</strong> #{requeteBean.selectedRequete.sujet}</p>
+        <p><strong>Description :</strong> #{requeteBean.selectedRequete.description}</p>
+        <p><strong>Statut :</strong> #{requeteBean.selectedRequete.statut}</p>
+
+        <h:form>
+            <h:outputLabel for="reponse" value="Réponse :" />
+            <h:inputTextarea id="reponse" value="#{requeteBean.reponse}" rows="5" required="true" />
+            <h:commandButton value="Envoyer Réponse" action="#{requeteBean.repondreARequete}" />
+        </h:form>
+
+        <h:form>
+            <h:commandButton value="Marquer comme Terminée" action="#{requeteBean.terminerRequete}" />
+        </h:form>
+    </div>
+</h:body>
+</html>

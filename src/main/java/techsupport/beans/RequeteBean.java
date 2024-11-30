@@ -1,47 +1,67 @@
 package techsupport.beans;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
+import techsupport.entity.Requete;
+import techsupport.daos.RequeteDAO;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.List;
 
 @Named
-@RequestScoped
-public class RequeteBean {
-    private Long id;
-    private String description;
-    private Date dateCreation;
-    private StatutRequete statut;
+@SessionScoped
+public class RequeteBean implements Serializable {
+    private RequeteDAO requeteDAO = new RequeteDAO();
+    private List<Requete> requetes;
+    private Requete selectedRequete;
+    private String reponse;
 
-    public Long getId() {
-        return id;
+    public RequeteBean() {
+
+        this.requetes = requeteDAO.recupererToutesLesRequetes();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+
+    public List<Requete> getRequetes() {
+        return requetes;
     }
 
-    public String getDescription() {
-        return description;
+
+    public void voirDetails(Long id) {
+        this.selectedRequete = requeteDAO.recupererRequeteParId(id.intValue());
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void repondreARequete() {
+        if (selectedRequete != null) {
+            selectedRequete.setStatut(Requete.Statut.EN_COURS);
+            // Simuler l'ajout d'une réponse (par exemple, par un admin)
+            // Cette méthode peut être enrichie pour envoyer un email
+            requeteDAO.mettreAJourStatut(selectedRequete.getId().intValue(), Requete.Statut.EN_COURS);
+            reponse = ""; // Réinitialiser le champ de réponse
+        }
     }
 
-    public Date getDateCreation() {
-        return dateCreation;
+    public void terminerRequete() {
+        if (selectedRequete != null) {
+            selectedRequete.setStatut(Requete.Statut.TERMINEE);
+            requeteDAO.mettreAJourStatut(selectedRequete.getId().intValue(), Requete.Statut.TERMINEE);
+        }
     }
 
-    public void setDateCreation(Date dateCreation) {
-        this.dateCreation = dateCreation;
+    // Getters et Setters
+    public Requete getSelectedRequete() {
+        return selectedRequete;
     }
 
-    public StatutRequete getStatut() {
-        return statut;
+    public void setSelectedRequete(Requete selectedRequete) {
+        this.selectedRequete = selectedRequete;
     }
 
-    public void setStatut(StatutRequete statut) {
-        this.statut = statut;
+    public String getReponse() {
+        return reponse;
+    }
+
+    public void setReponse(String reponse) {
+        this.reponse = reponse;
     }
 }
