@@ -3,58 +3,21 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 <h:head>
     <title>Soumission de Requête</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f4f4f9;
-            color: #333;
-        }
-
-        .container {
-            margin: 50px auto;
-            padding: 20px;
-            max-width: 600px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        textarea, input, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #388E3C;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
 </h:head>
 <h:body>
+    <header>
+        <h1>Soumission de Requête</h1>
+    </header>
     <div class="container">
-        <h2>Soumettre une Requête</h2>
         <h:form>
             <h:outputLabel for="sujet" value="Sujet :" />
             <h:inputText id="sujet" value="#{requeteBean.sujet}" required="true" />
+            <br />
             <h:outputLabel for="description" value="Description :" />
-            <h:inputTextarea id="description" value="#{requeteBean.description}" rows="5" required="true" />
-            <h:commandButton value="Envoyer" action="#{requeteBean.soumettreRequete}" />
+            <h:inputTextarea id="description" value="#{requeteBean.description}" required="true" />
+            <br />
+            <h:commandButton value="Soumettre" action="#{requeteBean.ajouterRequete}" />
             <h:messages />
         </h:form>
     </div>
