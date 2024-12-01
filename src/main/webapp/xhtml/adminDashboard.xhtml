@@ -1,32 +1,80 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/html">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <title>Tableau de Bord Admin</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </h:head>
 <h:body>
     <header>
         <h1>Tableau de Bord Admin</h1>
     </header>
     <div class="container">
-        <h:dataTable value="#{requeteBean.requetes}" var="requete" border="1">
+        <!-- Tableau des requêtes -->
+        <h:dataTable value="#{requeteBean.requetes}" var="requete" border="1" styleClass="styled-table">
             <h:column>
-                <f:facet name="header">ID</f:facet>
-                #{requete.id}
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{requete.id}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Sujet</f:facet>
-                #{requete.sujet}
+                <f:facet name="header">
+                    <h:outputText value="Sujet" />
+                </f:facet>
+                <h:outputText value="#{requete.sujet}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Description</f:facet>
-                #{requete.description}
+                <f:facet name="header">
+                    <h:outputText value="Description" />
+                </f:facet>
+                <h:outputText value="#{requete.description}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Statut</f:facet>
-                #{requete.statut}
+                <f:facet name="header">
+                    <h:outputText value="Statut" />
+                </f:facet>
+                <h:outputText value="#{requete.statut}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:selectOneMenu value="#{requeteBean.selectedStatut}">
+                        <f:selectItem itemValue="NOUVELLE" itemLabel="Nouvelle" />
+                        <f:selectItem itemValue="EN_COURS" itemLabel="En cours" />
+                        <f:selectItem itemValue="TERMINEE" itemLabel="Terminée" />
+                    </h:selectOneMenu>
+                    <h:commandButton value="Mettre à jour" action="#{requeteBean.updateStatut(requete)}" styleClass="action-button" />
+                </h:form>
             </h:column>
         </h:dataTable>
     </div>
