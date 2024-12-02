@@ -43,4 +43,5 @@ public class RequeteBean {
     public void setDateCreation(Date dateCreation) {
         this.dateCreation = dateCreation;
     }
+
 }
