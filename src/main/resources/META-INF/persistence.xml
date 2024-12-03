@@ -10,7 +10,7 @@
 
         <properties>
             <!-- Connexion à la base de données -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/support_technique?createDatabaseIfNotExist=true"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/support_technique"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/> <!-- à modifier -->
             <property name="jakarta.persistence.jdbc.password" value="pass"/> <!-- à modifier -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
@@ -20,6 +20,7 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/> <!-- Crée ou met à jour les tables -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>

@@ -10,10 +10,10 @@ import techsupport.daos.UtilisateurDAO;
 
 import java.io.IOException;
 
-@WebServlet("/authentification")
+@WebServlet("/jsp/auth")
 public class AuthenticationServlet extends HttpServlet {
 
-    UtilisateurDAO utilisateurDAO;
+    private UtilisateurDAO utilisateurDAO;
 
     @Override
     public void init() throws ServletException {
@@ -22,7 +22,56 @@ public class AuthenticationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Récupérer les paramètres du formulaire de connexion
+        // Récupérer l'action (connexion ou enregistrement)
+        String action = request.getParameter("action");
+
+        if ("register".equalsIgnoreCase(action)) {
+            handleRegister(request, response);
+        } else if ("login".equalsIgnoreCase(action)) {
+            handleLogin(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action non reconnue.");
+        }
+    }
+
+    /**
+     * Gère l'enregistrement d'un nouvel utilisateur.
+     */
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String nom = request.getParameter("nom");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        try {
+            // Vérifier si l'email existe déjà
+            if (utilisateurDAO.emailExiste(email)) {
+                request.setAttribute("errorMessage", "Cet email est déjà utilisé.");
+                request.getRequestDispatcher("/jsp/register.jsp").forward(request, response);
+                return;
+            }
+
+            // Créer un nouvel utilisateur
+            Utilisateur utilisateur = new Utilisateur();
+            utilisateur.setNom(nom);
+            utilisateur.setEmail(email);
+            utilisateur.setPassword(password); // Remplacer par un hachage dans le futur
+
+            // Enregistrer l'utilisateur dans la base
+            utilisateurDAO.ajouterUtilisateur(utilisateur);
+
+            // Rediriger avec un message de succès
+            request.setAttribute("successMessage", "Inscription réussie ! Veuillez vous connecter.");
+            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Une erreur est survenue lors de l'inscription.");
+            request.getRequestDispatcher("/jsp/register.jsp").forward(request, response);
+        }
+    }
+
+    /**
+     * Gère la connexion d'un utilisateur.
+     */
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -35,18 +84,17 @@ public class AuthenticationServlet extends HttpServlet {
                 request.getSession().setAttribute("utilisateurConnecte", utilisateur);
 
                 // Rediriger en fonction du rôle de l'utilisateur
-                if ("admin".equals(utilisateur.getRole())) {
-                    response.sendRedirect("gestionRequetesAdmin");
+                if ("ADMIN".equalsIgnoreCase(utilisateur.getRole().toString())) {
+                    response.sendRedirect("adminDashboard");
                 } else {
                     response.sendRedirect("mesRequetes");
                 }
             } else {
-                // Si les identifiants sont incorrects, renvoyer vers la page de connexion avec un message d'erreur
+                // Identifiants incorrects
                 request.setAttribute("errorMessage", "Email ou mot de passe incorrect.");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
             }
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServletException("Erreur lors de l'authentification de l'utilisateur", e);
         }
     }

@@ -12,7 +12,7 @@ import techsupport.daos.RequeteDAO;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/gestionRequetes")
+@WebServlet("/jsp/adminDashboard")
 public class GestionRequetesServlet extends HttpServlet {
 
     private RequeteDAO requeteDAO;
@@ -27,7 +27,7 @@ public class GestionRequetesServlet extends HttpServlet {
         // Récupérer l'administrateur connecté
         Utilisateur admin = (Utilisateur) request.getSession().getAttribute("utilisateurConnecte");
 
-        if (admin == null || !"admin".equals(admin.getRole())) {
+        if (admin == null || !"ADMIN".equals(admin.getRole().toString())) {
             response.sendRedirect("login.jsp");
             return;
         }

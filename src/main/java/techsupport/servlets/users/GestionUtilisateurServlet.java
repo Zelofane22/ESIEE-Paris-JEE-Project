@@ -68,7 +68,7 @@ public class GestionUtilisateurServlet extends HttpServlet {
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setNom(nom);
         utilisateur.setEmail(email);
-        utilisateur.setMotDePasse(hashedPassword);
+        utilisateur.setPassword(hashedPassword);
         utilisateur.setRole(Utilisateur.Role.UTILISATEUR);
 
         // Enregistrer l'utilisateur dans la base de données
@@ -104,7 +104,7 @@ public class GestionUtilisateurServlet extends HttpServlet {
 
         if (nouveauMotDePasse != null && !nouveauMotDePasse.isEmpty()) {
             String hashedPassword = DigestUtils.sha256Hex(nouveauMotDePasse);
-            utilisateurConnecte.setMotDePasse(hashedPassword);
+            utilisateurConnecte.setPassword(hashedPassword);
         }
 
         // Mettre à jour l'utilisateur dans la base de données

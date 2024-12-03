@@ -17,11 +17,11 @@ public class Utilisateur implements Serializable {
     private String email;
 
     @Column(nullable = false)
-    private String motDePasse;
+    private String password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.UTILISATEUR;
 
     // Enumération pour le rôle de l'utilisateur (par exemple, ADMIN ou UTILISATEUR)
     public enum Role {
@@ -33,10 +33,10 @@ public class Utilisateur implements Serializable {
     public Utilisateur() {}
 
     // Constructeur avec paramètres
-    public Utilisateur(String nom, String email, String motDePasse, Role role) {
+    public Utilisateur(String nom, String email, String password, Role role) {
         this.nom = nom;
         this.email = email;
-        this.motDePasse = motDePasse;
+        this.password = password;
         this.role = role;
     }
 
@@ -65,12 +65,12 @@ public class Utilisateur implements Serializable {
         this.email = email;
     }
 
-    public String getMotDePasse() {
-        return motDePasse;
+    public String getPassword() {
+        return password;
     }
 
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Role getRole() {
@@ -78,6 +78,6 @@ public class Utilisateur implements Serializable {
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.role = role != null ? role : Role.UTILISATEUR; // Défaut à UTILISATEUR si null
     }
 }
