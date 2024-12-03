@@ -24,8 +24,8 @@
     <br>
     <button type="submit">S'inscrire</button>
 </form>
-
-
-
+<c:if test="${not empty successMessage}">
+    <p style="color: red;">${successMessage}</p>
+</c:if>
 </body>
 </html>

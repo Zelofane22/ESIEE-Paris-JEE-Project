@@ -6,7 +6,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.codec.digest.DigestUtils;
 import techsupport.entity.Utilisateur;
 import techsupport.daos.UtilisateurDAO;
 
@@ -29,9 +28,6 @@ public class GestionUtilisateurServlet extends HttpServlet {
 
         try {
             switch (action) {
-                case "create":
-                    creerUtilisateur(request, response);
-                    break;
                 case "update":
                     mettreAJourUtilisateur(request, response);
                     break;
@@ -45,38 +41,6 @@ public class GestionUtilisateurServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new ServletException("Erreur lors de la gestion de l'utilisateur", e);
         }
-    }
-
-    private void creerUtilisateur(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        // Récupérer les paramètres du formulaire de création de compte
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String nom = request.getParameter("nom");
-
-        // Validation des données du formulaire
-        if (email == null || password == null || nom == null ||
-                email.isEmpty() || password.isEmpty() || nom.isEmpty()) {
-            request.setAttribute("errorMessage", "Tous les champs sont obligatoires.");
-            request.getRequestDispatcher("/inscription.jsp").forward(request, response);
-            return;
-        }
-
-        // Hacher le mot de passe avant de le sauvegarder
-        String hashedPassword = DigestUtils.sha256Hex(password);
-
-        // Créer un nouvel utilisateur
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setNom(nom);
-        utilisateur.setEmail(email);
-        utilisateur.setPassword(hashedPassword);
-        utilisateur.setRole(Utilisateur.Role.UTILISATEUR);
-
-        // Enregistrer l'utilisateur dans la base de données
-        utilisateurDAO.ajouterUtilisateur(utilisateur);
-
-        // Rediriger vers la page de connexion avec un message de succès
-        request.setAttribute("successMessage", "Votre compte a été créé avec succès. Veuillez vous connecter.");
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     private void mettreAJourUtilisateur(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
@@ -103,8 +67,7 @@ public class GestionUtilisateurServlet extends HttpServlet {
         utilisateurConnecte.setNom(nom);
 
         if (nouveauMotDePasse != null && !nouveauMotDePasse.isEmpty()) {
-            String hashedPassword = DigestUtils.sha256Hex(nouveauMotDePasse);
-            utilisateurConnecte.setPassword(hashedPassword);
+            utilisateurConnecte.setPassword(nouveauMotDePasse);
         }
 
         // Mettre à jour l'utilisateur dans la base de données

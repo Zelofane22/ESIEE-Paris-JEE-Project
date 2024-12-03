@@ -1,11 +1,7 @@
 package techsupport.daos;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import techsupport.entity.Requete;
-import techsupport.entity.Utilisateur;
 
 import java.util.List;
 
@@ -13,7 +9,7 @@ public class RequeteDAO {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("supportTechPU");
 
     // Ajouter une nouvelle requête
-    public void ajouterRequete(Requete requete) {
+    public void creerRequete(Requete requete) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -25,7 +21,7 @@ public class RequeteDAO {
     }
 
     // Récupérer une requête par ID
-    public Requete recupererRequeteParId(int idToRespond) {
+    public Requete getRequeteParId(int idToRespond) {
         EntityManager em = emf.createEntityManager();
         try {
             return em.find(Requete.class, idToRespond);
@@ -57,12 +53,12 @@ public class RequeteDAO {
         }
     }
 
-    // Récupérer les requêtes pour un utilisateur spécifique (utiliser par l'admin)
-    public List<Requete> getRequetesParUtilisateur(Utilisateur utilisateur) {
+    // Récupérer les requêtes pour un utilisateur spécifique
+    public List<Requete> getRequetesParUtilisateur(int utilisateurId) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Requete> query = em.createQuery("SELECT r FROM Requete r WHERE r.utilisateur = :utilisateur", Requete.class);
-            query.setParameter("utilisateur", utilisateur);
+            TypedQuery<Requete> query = em.createQuery("SELECT r FROM Requete r WHERE r.utilisateur.id = :utilisateurId", Requete.class);
+            query.setParameter("utilisateurId", utilisateurId);
             return query.getResultList();
         } finally {
             em.close();
@@ -85,7 +81,7 @@ public class RequeteDAO {
         }
     }
 
-    // Supprimer une requête (utiliser par l'admin)
+    // Supprimer une requête
     public void supprimerRequete(int id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -122,5 +118,19 @@ public class RequeteDAO {
     }
 
 
-
+    public void mettreAJourRequete(Requete requete) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = em.getTransaction();
+            transaction.begin();
+            em.merge(requete);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
 }

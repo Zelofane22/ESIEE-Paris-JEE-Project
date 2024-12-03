@@ -19,4 +19,13 @@ CREATE TABLE IF NOT EXISTS requetes (
 );
 INSERT INTO utilisateurs (nom, email, password, role)
 VALUES ('Admin Test', 'admin@example.com', 'admin', 'ADMIN');
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    requete_id INT NOT NULL,
+    auteur VARCHAR(255) NOT NULL, -- 'ADMIN' ou l'email de l'utilisateur
+    contenu TEXT NOT NULL,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (requete_id) REFERENCES requetes(id)
+);
+
 ```

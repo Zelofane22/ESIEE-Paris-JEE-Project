@@ -2,7 +2,9 @@ package techsupport.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "requetes")
@@ -36,6 +38,18 @@ public class Requete implements Serializable {
         EN_COURS,
         TERMINEE
     }
+
+    @OneToMany(mappedBy = "requete", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages = new ArrayList<>();
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
 
     // Constructeur par défaut requis par JPA
     public Requete() {

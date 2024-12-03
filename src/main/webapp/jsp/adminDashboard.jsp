@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tableau de Bord Admin</title>
+    <title>Tableau de bord - Admin</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <style>
         table {
@@ -51,43 +51,59 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Tableau de Bord Admin</h1>
-    </header>
-    <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Sujet</th>
-                    <th>Description</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%-- Boucle pour afficher les requêtes --%>
-                <c:forEach var="requete" items="${requetes}">
-                    <tr>
-                        <td>${requete.id}</td>
-                        <td>${requete.sujet}</td>
-                        <td>${requete.description}</td>
-                        <td>${requete.statut}</td>
-                        <td>
-                            <form action="GestionRequetesServlet" method="post" style="display: inline;">
-                                <input type="hidden" name="id" value="${requete.id}" />
-                                <select name="statut">
-                                    <option value="NOUVELLE" ${requete.statut == 'NOUVELLE' ? 'selected' : ''}>Nouvelle</option>
-                                    <option value="EN_COURS" ${requete.statut == 'EN_COURS' ? 'selected' : ''}>En cours</option>
-                                    <option value="TERMINEE" ${requete.statut == 'TERMINEE' ? 'selected' : ''}>Terminée</option>
-                                </select>
-                                <button type="submit" name="action" value="update" class="action-button">Mettre à jour</button>
-                            </form>
-                        </td>
-                    </tr>
+<h1>Gestion des Requêtes</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Utilisateur</th>
+        <th>Sujet</th>
+        <th>Description</th>
+        <th>Statut</th>
+        <th>Messages</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach var="requete" items="${requetes}">
+        <tr>
+            <td>${requete.id}</td>
+            <td>${requete.utilisateur.nom} (${requete.utilisateur.email})</td>
+            <td>${requete.sujet}</td>
+            <td>${requete.description}</td>
+            <td>${requete.statut}</td>
+            <td>
+                <c:forEach var="message" items="${requete.messages}">
+                    <p>
+                        <strong>${message.auteur} :</strong> ${message.contenu} <em>(${message.dateCreation})</em>
+                    </p>
                 </c:forEach>
-            </tbody>
-        </table>
-    </div>
+            </td>
+            <td>
+                <!-- Formulaire pour répondre -->
+                <form action="adminDashboard" method="post">
+                    <input type="hidden" name="action" value="repondre">
+                    <input type="hidden" name="requeteId" value="${requete.id}">
+                    <textarea name="message" placeholder="Votre réponse" required></textarea>
+                    <button type="submit">Envoyer</button>
+                </form>
+
+                <!-- Formulaire pour changer le statut -->
+                <form action="adminDashboard" method="post">
+                    <input type="hidden" name="action" value="updateStatut">
+                    <input type="hidden" name="id" value="${requete.id}">
+                    <select name="nouveauStatut" required>
+                        <option value="NOUVELLE" ${requete.statut == 'NOUVELLE' ? 'selected' : ''}>Nouvelle</option>
+                        <option value="EN_COURS" ${requete.statut == 'EN_COURS' ? 'selected' : ''}>En cours</option>
+                        <option value="TERMINEE" ${requete.statut == 'TERMINEE' ? 'selected' : ''}>Terminée</option>
+                    </select>
+                    <button type="submit">Mettre à jour</button>
+                </form>
+            </td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
 </body>
 </html>

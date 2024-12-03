@@ -61,10 +61,10 @@ public class AuthenticationServlet extends HttpServlet {
 
             // Rediriger avec un message de succès
             request.setAttribute("successMessage", "Inscription réussie ! Veuillez vous connecter.");
-            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Une erreur est survenue lors de l'inscription.");
-            request.getRequestDispatcher("/jsp/register.jsp").forward(request, response);
+            request.getRequestDispatcher("register.jsp").forward(request, response);
         }
     }
 
@@ -85,9 +85,9 @@ public class AuthenticationServlet extends HttpServlet {
 
                 // Rediriger en fonction du rôle de l'utilisateur
                 if ("ADMIN".equalsIgnoreCase(utilisateur.getRole().toString())) {
-                    response.sendRedirect("adminDashboard");
+                    response.sendRedirect("adminDashboard.jsp");
                 } else {
-                    response.sendRedirect("mesRequetes");
+                    response.sendRedirect("mes_requetes.jsp");
                 }
             } else {
                 // Identifiants incorrects
