@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/jsp/requetes")
+@WebServlet("/requetes")
 public class RequeteServlet extends HttpServlet {
 
     private RequeteDAO requeteDAO;

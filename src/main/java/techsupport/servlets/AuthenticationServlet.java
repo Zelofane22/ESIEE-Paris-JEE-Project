@@ -10,7 +10,7 @@ import techsupport.daos.UtilisateurDAO;
 
 import java.io.IOException;
 
-@WebServlet("/jsp/auth")
+@WebServlet("/auth")
 public class AuthenticationServlet extends HttpServlet {
 
     private UtilisateurDAO utilisateurDAO;
@@ -46,7 +46,7 @@ public class AuthenticationServlet extends HttpServlet {
             // Vérifier si l'email existe déjà
             if (utilisateurDAO.emailExiste(email)) {
                 request.setAttribute("errorMessage", "Cet email est déjà utilisé.");
-                request.getRequestDispatcher("/jsp/register.jsp").forward(request, response);
+                request.getRequestDispatcher("/register.jsp").forward(request, response);
                 return;
             }
 
@@ -92,7 +92,7 @@ public class AuthenticationServlet extends HttpServlet {
             } else {
                 // Identifiants incorrects
                 request.setAttribute("errorMessage", "Email ou mot de passe incorrect.");
-                request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
             throw new ServletException("Erreur lors de l'authentification de l'utilisateur", e);
