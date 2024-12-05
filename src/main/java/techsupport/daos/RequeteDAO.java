@@ -54,11 +54,12 @@ public class RequeteDAO {
     }
 
     // Récupérer les requêtes pour un utilisateur spécifique
-    public List<Requete> getRequetesParUtilisateur(int utilisateurId) {
+    public List<Requete> getRequetesParUtilisateur(int utilisateur_id) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Requete> query = em.createQuery("SELECT r FROM Requete r WHERE r.utilisateur.id = :utilisateurId", Requete.class);
-            query.setParameter("utilisateurId", utilisateurId);
+            TypedQuery<Requete> query = em.createQuery("SELECT r FROM Requete r WHERE r.utilisateur.id = :utilisateur_id", Requete.class);
+            query.setParameter("utilisateur_id", utilisateur_id);
+            System.out.println(query.getResultList());
             return query.getResultList();
         } finally {
             em.close();

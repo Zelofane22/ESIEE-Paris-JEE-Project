@@ -81,13 +81,13 @@ public class AuthenticationServlet extends HttpServlet {
 
             if (utilisateur != null) {
                 // Stocker les informations de l'utilisateur dans la session
-                request.getSession().setAttribute("utilisateurConnecte", utilisateur);
+                request.getSession().setAttribute("cookie", utilisateur);
 
                 // Rediriger en fonction du rôle de l'utilisateur
                 if ("ADMIN".equalsIgnoreCase(utilisateur.getRole().toString())) {
                     response.sendRedirect("adminDashboard.jsp");
                 } else {
-                    response.sendRedirect("mes_requetes.jsp");
+                    response.sendRedirect("requetes");
                 }
             } else {
                 // Identifiants incorrects

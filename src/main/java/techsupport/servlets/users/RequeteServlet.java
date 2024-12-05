@@ -25,7 +25,7 @@ public class RequeteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("utilisateur");
+        Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("cookie");
 
         if (utilisateur == null) {
             response.sendRedirect("login.jsp");
@@ -41,7 +41,7 @@ public class RequeteServlet extends HttpServlet {
                     afficherDetailsRequete(request, response, utilisateur);
                     break;
                 default:
-                    response.sendRedirect("dashboard.jsp");
+                    response.sendRedirect("requetes?action=list");
                     break;
             }
         } catch (Exception e) {
@@ -53,7 +53,7 @@ public class RequeteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("utilisateur");
+        Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("cookie");
 
         if (utilisateur == null) {
             response.sendRedirect("login.jsp");
@@ -72,7 +72,7 @@ public class RequeteServlet extends HttpServlet {
                     supprimerRequete(request, response, utilisateur);
                     break;
                 default:
-                    response.sendRedirect("dashboard.jsp");
+                    response.sendRedirect("mes_requetes.jsp");
                     break;
             }
         } catch (Exception e) {
@@ -85,6 +85,9 @@ public class RequeteServlet extends HttpServlet {
         List<Requete> requetes = requeteDAO.getRequetesParUtilisateur(utilisateur.getId());
         request.setAttribute("requetes", requetes);
         request.getRequestDispatcher("mes_requetes.jsp").forward(request, response);
+        System.out.println("\n---------------Debug---------------");
+        System.out.println(utilisateur.getId());
+        System.out.println(requetes);
     }
 
     private void afficherDetailsRequete(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws ServletException, IOException {

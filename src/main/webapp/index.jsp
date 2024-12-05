@@ -72,9 +72,8 @@
         <div>
             <h2>Version JSP</h2>
             <a href="login.jsp">Connexion Administrateur (JSP)</a>
-            <a href="mes_requetes.jsp">Soumettre une Requête (JSP)</a>
             <a href="register.jsp">S'inscrire (JSP)</a>
-
+            <a href="mes_requetes.jsp">Soumettre une Requête (JSP)</a>
         </div>
 
         <hr />

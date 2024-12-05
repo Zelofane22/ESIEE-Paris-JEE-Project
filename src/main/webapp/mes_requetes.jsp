@@ -1,4 +1,8 @@
+<%@ page import="techsupport.entity.Utilisateur" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page session="true" %>
+<%@ page import="java.util.List" %>
+<%@ page import="techsupport.entity.Requete" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -65,40 +69,60 @@
 </head>
 <body>
 <h1>Mes Requêtes</h1>
+
+<%
+    HttpSession mysession = request.getSession(false);
+    if (mysession == null || session.getAttribute("cookie") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+    Utilisateur utilisateur = (Utilisateur) session.getAttribute("cookie");
+%>
+<h1>Bienvenue, <%= utilisateur.getNom() %> !</h1>
+<a href="LogoutServlet">Se déconnecter</a>
+
 <a href="creer_requete.jsp">Créer une nouvelle requête</a>
 <hr>
-
-<c:if test="${not empty requetes}">
-    <table border="1">
-        <thead>
-        <tr>
-            <th>Sujet</th>
-            <th>Description</th>
-            <th>Statut</th>
-            <th>Date de création</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="requete" items="${requetes}">
-            <tr>
-                <td>${requete.sujet}</td>
-                <td>${requete.description}</td>
-                <td>${requete.statut}</td>
-                <td>${requete.dateCreation}</td>
-                <td>
-                    <a href="details_requete.jsp?id=${requete.id}">Voir</a> |
-                    <a href="supprimer_requete?id=${requete.id}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette requête ?');">Supprimer</a> |
-                    <a href="mettre_a_jour_requete.jsp?id=${requete.id}">Mettre à jour</a>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-</c:if>
-
-<c:if test="${empty requetes}">
-    <p>Aucune requête trouvée.</p>
-</c:if>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Sujet</th>
+        <th>Description</th>
+        <th>Statut</th>
+        <th>Date de création</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+        // Récupérer les requêtes passées par le servlet
+        List<Requete> requetes = (List<Requete>) request.getAttribute("requetes");
+        if (requetes != null && !requetes.isEmpty()) {
+            for (Requete requete : requetes) {
+    %>
+    <tr>
+        <td><%= requete.getSujet() %></td>
+        <td><%= requete.getDescription() %></td>
+        <td><%= requete.getStatut() %></td>
+        <td><%= requete.getDateCreation() %></td>
+        <td>
+            <a href="details_requete.jsp?id=<%= requete.getId() %>">Voir</a> |
+            <a href="supprimer_requete?id=<%= requete.getId() %>"
+               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette requête ?');">Supprimer</a> |
+            <a href="mettre_a_jour_requete.jsp?id=<%= requete.getId() %>">Mettre à jour</a>
+        </td>
+    </tr>
+    <%
+        }
+    } else {
+    %>
+    <tr>
+        <td colspan="5">Aucune requête trouvée.</td>
+    </tr>
+    <%
+        }
+    %>
+    </tbody>
+</table>
 </body>
 </html>
