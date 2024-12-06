@@ -30,6 +30,21 @@ public class RequeteDAO {
         }
     }
 
+    public List<Requete> rechercherRequetes(String keyword, int utilisateurId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Requete> query = em.createQuery(
+                    "SELECT r FROM Requete r WHERE r.utilisateur.id = :utilisateurId AND " +
+                            "(LOWER(r.sujet) LIKE :keyword OR LOWER(r.description) LIKE :keyword)", Requete.class
+            );
+            query.setParameter("utilisateurId", utilisateurId);
+            query.setParameter("keyword", "%" + keyword.toLowerCase() + "%");
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     // Récupérer toutes les requêtes
     public List<Requete> recupererToutesLesRequetes() {
         EntityManager em = emf.createEntityManager();

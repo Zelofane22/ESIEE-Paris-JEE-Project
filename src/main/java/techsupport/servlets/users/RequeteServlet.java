@@ -25,6 +25,7 @@ public class RequeteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        System.out.println("------------------action: " + action +" ----------------------");
         Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("cookie");
 
         if (utilisateur == null) {
@@ -34,14 +35,16 @@ public class RequeteServlet extends HttpServlet {
 
         try {
             switch (action != null ? action : "") {
-                case "list":
-                    afficherRequetesUtilisateur(request, response, utilisateur);
-                    break;
                 case "view":
                     afficherDetailsRequete(request, response, utilisateur);
                     break;
+                case "search":
+                    searchRequete(request, response, utilisateur);
+                case "delete":
+                    supprimerRequete(request, response, utilisateur);
+                    break;
                 default:
-                    response.sendRedirect("requetes?action=list");
+                    afficherRequetesUtilisateur(request, response, utilisateur);
                     break;
             }
         } catch (Exception e) {
@@ -53,6 +56,7 @@ public class RequeteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        System.out.println("------------------action: " + action +" ----------------------");
         Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("cookie");
 
         if (utilisateur == null) {
@@ -68,9 +72,6 @@ public class RequeteServlet extends HttpServlet {
                 case "update":
                     mettreAJourRequete(request, response, utilisateur);
                     break;
-                case "delete":
-                    supprimerRequete(request, response, utilisateur);
-                    break;
                 default:
                     response.sendRedirect("mes_requetes.jsp");
                     break;
@@ -81,24 +82,40 @@ public class RequeteServlet extends HttpServlet {
         }
     }
 
+    private void searchRequete(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws ServletException, IOException {
+        try {
+            // Récupérer le mot-clé de recherche depuis les paramètres
+            String keyword = request.getParameter("keyword");
+
+            // Appeler la méthode de recherche dans le DAO
+            List<Requete> requetes = requeteDAO.rechercherRequetes(keyword, utilisateur.getId());
+
+            // Ajouter les résultats comme attribut de requête
+            request.setAttribute("requetes", requetes);
+
+            // Transférer vers la JSP
+            request.getRequestDispatcher("mes_requetes.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("mes_requetes.jsp?error=RechercheImpossible");
+        }
+    }
+
     private void afficherRequetesUtilisateur(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws ServletException, IOException {
         List<Requete> requetes = requeteDAO.getRequetesParUtilisateur(utilisateur.getId());
         request.setAttribute("requetes", requetes);
         request.getRequestDispatcher("mes_requetes.jsp").forward(request, response);
-        System.out.println("\n---------------Debug---------------");
-        System.out.println(utilisateur.getId());
-        System.out.println(requetes);
     }
 
     private void afficherDetailsRequete(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws ServletException, IOException {
         int idRequete = (int) Long.parseLong(request.getParameter("id"));
         Requete requete = requeteDAO.getRequeteParId(idRequete);
 
-        if (requete == null || requete.getUtilisateur().getId() == utilisateur.getId()) {
+        if (requete == null || requete.getUtilisateur().getId() != utilisateur.getId()) {
             response.sendRedirect("error.jsp");
             return;
         }
-
         request.setAttribute("requete", requete);
         request.getRequestDispatcher("details_requete.jsp").forward(request, response);
     }
@@ -111,13 +128,12 @@ public class RequeteServlet extends HttpServlet {
             response.sendRedirect("mes_requetes.jsp?error=empty_fields");
             return;
         }
-
         Requete requete = new Requete(utilisateur, sujet, description);
         requeteDAO.creerRequete(requete);
         response.sendRedirect("requetes?action=list");
     }
 
-    private void mettreAJourRequete(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws IOException {
+    private void mettreAJourRequeteStatut(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws IOException {
         int idRequete = (int) Long.parseLong(request.getParameter("id"));
         String statutParam = request.getParameter("statut");
 
@@ -138,8 +154,34 @@ public class RequeteServlet extends HttpServlet {
         }
     }
 
+    private void mettreAJourRequete(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws IOException {
+        try {
+            // Récupérer les paramètres du formulaire
+            int requeteId = Integer.parseInt(request.getParameter("id"));
+            String sujet = request.getParameter("sujet");
+            String description = request.getParameter("description");
+
+            // Récupérer la requête depuis la base de données
+            Requete requete = requeteDAO.getRequeteParId(requeteId);
+
+            // Mettre à jour les champs de la requête
+            requete.setSujet(sujet);
+            requete.setDescription(description);
+            requeteDAO.mettreAJourRequete(requete);
+
+            // Rediriger vers les détails de la requête
+            response.sendRedirect("requetes?action=view&id=" + requeteId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("requetes");
+        }
+    }
+
+
+
     private void supprimerRequete(HttpServletRequest request, HttpServletResponse response, Utilisateur utilisateur) throws IOException {
-        int idRequete = (int) Long.parseLong(request.getParameter("id"));
+        int idRequete = Integer.parseInt(request.getParameter("id"));
 
         Requete requete = requeteDAO.getRequeteParId(idRequete);
 

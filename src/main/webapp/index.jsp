@@ -70,20 +70,19 @@
 
         <!-- Version JSP -->
         <div>
-            <h2>Version JSP</h2>
+<%--            <h2>Version JSP</h2>--%>
             <a href="login.jsp">Connexion Administrateur (JSP)</a>
             <a href="register.jsp">S'inscrire (JSP)</a>
-            <a href="mes_requetes.jsp">Soumettre une Requête (JSP)</a>
         </div>
 
         <hr />
 
-        <!-- Version JSF -->
-        <div>
-            <h2>Version JSF</h2>
-            <a href="xhtml/loginAdmin.xhtml">Connexion Administrateur (JSF)</a>
-            <a href="xhtml/soumissionRequete.xhtml">Soumettre une Requête (JSF)</a>
-        </div>
+<%--        <!-- Version JSF -->--%>
+<%--        <div>--%>
+<%--            <h2>Version JSF</h2>--%>
+<%--            <a href="xhtml/loginAdmin.xhtml">Connexion Administrateur (JSF)</a>--%>
+<%--            <a href="xhtml/soumissionRequete.xhtml">Soumettre une Requête (JSF)</a>--%>
+<%--        </div>--%>
     </div>
 </body>
 </html>

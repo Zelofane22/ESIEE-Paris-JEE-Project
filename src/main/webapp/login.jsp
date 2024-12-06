@@ -36,6 +36,11 @@
 					</span>
                     <input type="hidden" name="action" value="login">
 
+                    <!-- Affichage du message d'erreur -->
+                    <c:if test="${not empty errorMessage}">
+                        <p style="color: red;">${errorMessage}</p>
+                    </c:if>
+
                     <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                         <label>
                             <input class="input100" type="text" id="email" name="email" placeholder="Email">
@@ -76,10 +81,6 @@
                         </a>
                     </div>
                 </form>
-                <!-- Affichage du message d'erreur -->
-                <c:if test="${not empty errorMessage}">
-                    <p style="color: red;">${errorMessage}</p>
-                </c:if>
             </div>
         </div>
 

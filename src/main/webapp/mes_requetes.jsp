@@ -81,6 +81,15 @@
 <h1>Bienvenue, <%= utilisateur.getNom() %> !</h1>
 <a href="LogoutServlet">Se déconnecter</a>
 
+<!-- Formulaire de recherche -->
+<form action="requetes" method="GET">
+    <input type="hidden" name="action" value="search">
+    <label for="keyword">Mot-clé :</label>
+    <input type="text" id="keyword" name="keyword" placeholder="Entrez un mot-clé..." required>
+    <button type="submit">Rechercher</button>
+</form>
+<hr>
+
 <a href="creer_requete.jsp">Créer une nouvelle requête</a>
 <hr>
 <table border="1">
@@ -106,10 +115,9 @@
         <td><%= requete.getStatut() %></td>
         <td><%= requete.getDateCreation() %></td>
         <td>
-            <a href="details_requete.jsp?id=<%= requete.getId() %>">Voir</a> |
-            <a href="supprimer_requete?id=<%= requete.getId() %>"
-               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette requête ?');">Supprimer</a> |
-            <a href="mettre_a_jour_requete.jsp?id=<%= requete.getId() %>">Mettre à jour</a>
+            <a href="requetes?action=view&id=<%= requete.getId() %>">Voir</a> |
+            <a href="requetes?action=delete&id=<%= requete.getId() %>"
+               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette requête ?');">Supprimer</a>
         </td>
     </tr>
     <%
