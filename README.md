@@ -28,4 +28,7 @@ CREATE TABLE messages (
     FOREIGN KEY (requete_id) REFERENCES requetes(id)
 );
 
+ALTER TABLE utilisateurs
+MODIFY COLUMN role ENUM('ADMIN', 'UTILISATEUR') NOT NULL DEFAULT 'UTILISATEUR';
+
 ```
