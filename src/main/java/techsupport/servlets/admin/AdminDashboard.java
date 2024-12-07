@@ -13,7 +13,7 @@ import techsupport.daos.RequeteDAO;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/jsp/adminDashboard")
+@WebServlet("/adminDashboard")
 public class AdminDashboard extends HttpServlet {
 
     private RequeteDAO requeteDAO;
@@ -26,18 +26,16 @@ public class AdminDashboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, IOException {
         // Récupérer l'administrateur connecté
-        Utilisateur admin = (Utilisateur) request.getSession().getAttribute("utilisateurConnecte");
+        Utilisateur admin = (Utilisateur) request.getSession().getAttribute("cookie");
 
         if (admin == null || !"ADMIN".equals(admin.getRole().toString())) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        // l'admin doit aussi récupérer une requête par id
-
         List<Requete> requetes = requeteDAO.recupererToutesLesRequetes();
         request.setAttribute("requetes", requetes);
-        request.getRequestDispatcher("/gestionRequetesAdmin.jsp").forward(request, response);
+        request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
     }
 
     @Override

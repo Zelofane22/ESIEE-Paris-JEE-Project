@@ -85,7 +85,7 @@ public class AuthenticationServlet extends HttpServlet {
 
                 // Rediriger en fonction du rôle de l'utilisateur
                 if ("ADMIN".equalsIgnoreCase(utilisateur.getRole().toString())) {
-                    response.sendRedirect("adminDashboard.jsp");
+                    response.sendRedirect("adminDashboard");
                 } else {
                     response.sendRedirect("requetes");
                 }

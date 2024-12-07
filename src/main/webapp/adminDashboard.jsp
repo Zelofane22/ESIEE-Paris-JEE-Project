@@ -1,3 +1,6 @@
+<%@ page import="techsupport.entity.Requete" %>
+<%@ page import="java.util.List" %>
+<%@ page import="techsupport.entity.Utilisateur" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -62,58 +65,72 @@
     </style>
 </head>
 <body>
+<%
+    // Vérification de la session et récupération de l'utilisateur
+    HttpSession mysession = request.getSession(false);
+    if (mysession == null || mysession.getAttribute("cookie") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <h1>Gestion des Requêtes</h1>
 
 <table border="1">
     <thead>
     <tr>
-        <th>ID</th>
         <th>Utilisateur</th>
         <th>Sujet</th>
         <th>Description</th>
         <th>Statut</th>
-        <th>Messages</th>
+        <th>Date de création</th>
         <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="requete" items="${requetes}">
-        <tr>
-            <td>${requete.id}</td>
-            <td>${requete.utilisateur.nom} (${requete.utilisateur.email})</td>
-            <td>${requete.sujet}</td>
-            <td>${requete.description}</td>
-            <td>${requete.statut}</td>
-            <td>
-                <c:forEach var="message" items="${requete.messages}">
-                    <p>
-                        <strong>${message.auteur} :</strong> ${message.contenu} <em>(${message.dateCreation})</em>
-                    </p>
-                </c:forEach>
-            </td>
-            <td>
-                <!-- Formulaire pour répondre -->
-                <form action="adminDashboard" method="post">
-                    <input type="hidden" name="action" value="repondre">
-                    <input type="hidden" name="requeteId" value="${requete.id}">
-                    <textarea name="message" placeholder="Votre réponse" required></textarea>
-                    <button type="submit">Envoyer</button>
-                </form>
+    <%
+        // Récupérer les requêtes passées par le servlet
+        List<Requete> requetes = (List<Requete>) request.getAttribute("requetes");
+        if (requetes != null && !requetes.isEmpty()) {
+            for (Requete requete : requetes) {
+    %>
+    <tr>
+        <td><%= requete.getUtilisateur().getNom() %> (<%= requete.getUtilisateur().getEmail() %>)</td>
+        <td><%= requete.getSujet() %></td>
+        <td><%= requete.getDescription() %></td>
+        <td><%= requete.getStatut() %></td>
+        <td><%= requete.getDateCreation() %></td>
+        <td>
+            <!-- Formulaire pour répondre -->
+            <form action="adminDashboard" method="post">
+                <input type="hidden" name="action" value="repondre">
+                <input type="hidden" name="requeteId" value="<%= requete.getId() %>">
+                <textarea name="message" placeholder="Votre réponse" required></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
 
-                <!-- Formulaire pour changer le statut -->
-                <form action="adminDashboard" method="post">
-                    <input type="hidden" name="action" value="updateStatut">
-                    <input type="hidden" name="id" value="${requete.id}">
-                    <select name="nouveauStatut" required>
-                        <option value="NOUVELLE" ${requete.statut == 'NOUVELLE' ? 'selected' : ''}>Nouvelle</option>
-                        <option value="EN_COURS" ${requete.statut == 'EN_COURS' ? 'selected' : ''}>En cours</option>
-                        <option value="TERMINEE" ${requete.statut == 'TERMINEE' ? 'selected' : ''}>Terminée</option>
-                    </select>
-                    <button type="submit">Mettre à jour</button>
-                </form>
-            </td>
-        </tr>
-    </c:forEach>
+            <!-- Formulaire pour changer le statut -->
+            <form action="adminDashboard" method="post">
+                <input type="hidden" name="action" value="updateStatut">
+                <input type="hidden" name="requeteId" value="<%= requete.getId() %>">
+                <select name="nouveauStatut" required>
+                    <option value="NOUVELLE" <%= "NOUVELLE".equals(requete.getStatut().name()) ? "selected" : "" %>>Nouvelle</option>
+                    <option value="EN_COURS" <%= "EN_COURS".equals(requete.getStatut().name()) ? "selected" : "" %>>En cours</option>
+                    <option value="TERMINEE" <%= "TERMINEE".equals(requete.getStatut().name()) ? "selected" : "" %>>Terminée</option>
+                </select>
+                <button type="submit">Mettre à jour</button>
+            </form>
+        </td>
+    </tr>
+    <%
+        }
+    } else {
+    %>
+    <tr>
+        <td colspan="6">Aucune requête trouvée.</td>
+    </tr>
+    <%
+        }
+    %>
     </tbody>
 </table>
 </body>
